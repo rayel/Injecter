@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-namespace Injecter
+
+namespace Injector
 {
     [Serializable, StructLayout(LayoutKind.Sequential)]
     public struct MSG
@@ -35,4 +36,66 @@ namespace Injecter
     }
 
     public delegate int HookProc(int nCode, int wParam, IntPtr lParam);
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal class SECURITY_ATTRIBUTES
+    {
+        int nLength;
+        IntPtr lpSecurityDescriptor;
+        bool bInheritHandle;
+    }
+
+    enum AllocationTypes
+    {
+        MEM_COMMIT = 0x00001000,
+        MEM_RESERVE = 0x00002000,
+        MEM_RESET = 0x00080000,
+        MEM_RESET_UNDO = 0x1000000,
+        MEM_LARGE_PAGES = 0x20000000,
+        MEM_PHYSICAL = 0x00400000,
+        MEM_TOP_DOWN = 0x00100000,
+    }
+
+    enum FreeTypes
+    {
+        MEM_RELEASE = 0x8000,
+        MEM_DECOMMIT = 0x4000
+    }
+
+    enum ProtectTypes
+    {
+        PAGE_EXECUTE = 0x10,
+        PAGE_EXECUTE_READ = 0x20,
+        PAGE_EXECUTE_READWRITE = 0x40,
+        PAGE_EXECUTE_WRITECOPY = 0x80,
+        PAGE_NOACCESS = 0x01,
+        PAGE_READONLY = 0x02,
+        PAGE_READWRITE = 0x04,
+        PAGE_WRITECOPY = 0x08,
+        PAGE_GUARD = 0x100,
+        PAGE_NOCACHE = 0x200,
+        PAGE_WRITECOMBINE = 0x400
+    }
+
+    [Flags]
+    enum DesiredAccesstypes
+    {
+        DELETE = 0x00010000,
+        READ_CONTROL = 0x00020000,
+        SYNCHRONIZE = 0x00100000,
+        WRITE_DAC = 0x00040000,
+        WRITE_OWNER = 0x00080000,
+        PROCESS_CREATE_PROCESS = 0x0080,
+        PROCESS_CREATE_THREAD = 0x0002,
+        PROCESS_DUP_HANDLE = 0x0040,
+        PROCESS_QUERY_INFORMATION = 0x0400,
+        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000,
+        PROCESS_SET_INFORMATION = 0x0200,
+        PROCESS_SET_QUOTA = 0x0100,
+        PROCESS_SUSPEND_RESUME = 0x0800,
+        PROCESS_TERMINATE = 0x0001,
+        PROCESS_VM_OPERATION = 0x0008,
+        PROCESS_VM_READ = 0x0010,
+        PROCESS_VM_WRITE = 0x0020,
+    }
 }
