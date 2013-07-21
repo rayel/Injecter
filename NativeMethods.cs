@@ -53,9 +53,33 @@ namespace Injector
         [DllImport("Kernel32.dll", SetLastError = true)]
         public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, string lpBuffer, int nSize, out int lpNumberOfBytesWritten);
 
+
+        //WINBASEAPI
+        //__out_opt
+        //HMODULE
+        //WINAPI
+        //GetModuleHandleW(
+        //__in_opt LPCWSTR lpModuleName
+        //);
+        [DllImport("Kernel32.dll", SetLastError = true)]
+        public static extern int GetModuleHandleA(string lpModuleName);
+
+        //WINBASEAPI
+        //FARPROC
+        //WINAPI
+        //GetProcAddress (
+        //__in HMODULE hModule,
+        //__in LPCSTR lpProcName
+        //);
         [DllImport("Kernel32.dll", SetLastError = true)]
         public static extern IntPtr GetProcAddress(int hModule, string lpProcName);
 
+        //WINBASEAPI
+        //DWORD
+        //WINAPI
+        //GetCurrentThreadId(
+        //VOID
+        //);
         [DllImport("Kernel32.dll", SetLastError = true)]
         public static extern int GetCurrentThreadId();
 
@@ -85,16 +109,6 @@ namespace Injector
         //);
         [DllImport("Kernel32.dll", SetLastError = true)]
         public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
-
-        //WINBASEAPI
-        //__out_opt
-        //HMODULE
-        //WINAPI
-        //GetModuleHandleW(
-        //__in_opt LPCWSTR lpModuleName
-        //);
-        [DllImport("Kernel32.dll", SetLastError = true)]
-        public static extern int GetModuleHandleA(string lpModuleName);
 
         //WINBASEAPI
         //DWORD

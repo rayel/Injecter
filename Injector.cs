@@ -13,7 +13,7 @@ namespace Injector
         private IntPtr procaddress;
         private IntPtr hthread;
 
-        public void doInject(int pid, string dllpath)
+        public void doInject(string dllfullname, int pid)
         {
             try
             {
@@ -23,27 +23,31 @@ namespace Injector
                     Debug.Print("OpenProcess Error");
                     return;
                 }
+                Debug.Print("OpenProcess OK");
 
-                baseaddress = NativeMethods.VirtualAllocEx(hprocess, IntPtr.Zero, dllpath.Length, (int)AllocationTypes.MEM_COMMIT, (int)ProtectTypes.PAGE_READWRITE);
+                baseaddress = NativeMethods.VirtualAllocEx(hprocess, IntPtr.Zero, dllfullname.Length, (int)AllocationTypes.MEM_COMMIT, (int)ProtectTypes.PAGE_READWRITE);
                 if (baseaddress == IntPtr.Zero)
                 {
                     Debug.Print("VirtualAllocEx Error");
                     return;
                 }
+                Debug.Print("VirtualAllocEx OK");
 
                 int szwritten = 0;
-                if (!NativeMethods.WriteProcessMemory(hprocess, baseaddress, dllpath, dllpath.Length, out szwritten))
+                if (!NativeMethods.WriteProcessMemory(hprocess, baseaddress, dllfullname, dllfullname.Length, out szwritten))
                 {
                     Debug.Print("WriteProcessMemory Error");
                     return;
                 }
+                Debug.Print("WriteProcessMemory OK");
 
-                procaddress = NativeMethods.GetProcAddress(NativeMethods.GetModuleHandleA("Kernel32"), "LoadLibraryW");
+                procaddress = NativeMethods.GetProcAddress(NativeMethods.GetModuleHandleA("Kernel32"), "LoadLibraryA");
                 if (procaddress == IntPtr.Zero)
                 {
                     Debug.Print("GetProcAddress Error");
                     return;
                 }
+                Debug.Print("GetProcAddress OK");
 
                 int outthreadid = 0;
                 hthread = NativeMethods.CreateRemoteThread(hprocess, null, 0, procaddress, baseaddress, 0, out outthreadid);
@@ -52,12 +56,13 @@ namespace Injector
                     Debug.Print("CreateRemoteThread Error");
                     return;
                 }
+                Debug.Print("CreateRemoteThread OK");
 
                 NativeMethods.WaitForSingleObject(hthread, 0xFFFFFFFF);
             }
             catch (Exception e)
             {
-                Debug.Print(e.ToString());
+                Debug.Print(e.StackTrace.ToString());
             }
             finally
             {
